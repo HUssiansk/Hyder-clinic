@@ -803,13 +803,34 @@
       btn.disabled = true;
       se.hidden = true;
 
-      submitBookingToSupabase(day, nm, ph, service)
-        .then(function () {
-          taken[day + '|' + slot] = 1;
-          document.getElementById('bookForm').innerHTML =
-            '<div class="okb"><div class="okc">✓</div><h3>تم الحجز</h3><p>' +
-            when + '<br>الساعة ' + slot + '</p><p class="note">نتمنى لك دوام الصحة، بانتظارك في العيادة</p><button type="button" class="btn" onclick="location.reload()">حجز جديد</button></div>';
-        })
+      function submitBookingToSupabase(dayValue, nm, ph, service) {
+  return fetch(SB_URL + '/rest/v1/bookings', {
+    method: 'POST',
+    headers: Object.assign({
+      'Content-Type': 'application/json',
+      Prefer: 'return=minimal'
+    }, sbH()),
+    body: JSON.stringify({
+      day: dayValue,
+      slot: slot,
+      name: nm,
+      phone: ph,
+      service: service
+    })
+  }).then(function (r) {
+    if (r.status === 409) {
+      const err = new Error('slot taken');
+      err.slotTaken = true;
+      throw err;
+    }
+    if (!r.ok) {
+      return r.text().then(function (t) {
+        throw new Error('booking failed: ' + r.status + ' ' + t);
+      });
+    }
+    return true;
+  });
+}
         .catch(function (err) {
           console.error('booking failed:', err);
 
