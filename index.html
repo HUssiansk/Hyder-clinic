@@ -828,11 +828,9 @@
             return;
           }
 
-          const fallbackText = createFallbackBookingText(nm, ph, service, day, slot);
-          se.textContent = 'تعذر الاتصال بالخادم مؤقتاً، تم تجهيز الطلب ليُرسل عبر واتساب لإتمام الحجز يدوياً.';
-          se.hidden = false;
-          btn.disabled = false;
-          setTimeout(function () { wa(fallbackText); }, 400);
+          se.textContent = 'فشل الحجز: ' + (err.message || 'خطأ غير معروف');
+se.hidden = false;
+btn.disabled = false;
         });
     }
 
