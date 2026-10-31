@@ -615,7 +615,7 @@
           html += '<div class="mh">' + MN[currentMonth] + ' ' + ar(d.getFullYear()) + '</div>';
         }
 
-        group += '<button type="button" class="dc' + (full ? ' full' : '') + '" data-t="' + (+d) + '"' + (full ? ' disabled' : '') + '><small>' + (full ? 'ممتلئ' : DN[d.getDay()]) + '</small><div>' + ar(d.getDate()) + '</div></button>';
+        group += '<button type="button" class="dc' + (full ? ' full' : '') + '" data-t="' + (+d) + '"' + (full ? ' disabled' : '') + '><small>' + (full ? 'ممتلئ' : DN[d.getDay()]) + '</small><span>' + ar(d.getDate()) + '</span></button>';
       }
 
       if (group) html += '<div class="dg">' + group + '</div>';
@@ -839,8 +839,11 @@
             return;
           }
 
-          se.textContent = 'فشل الحجز: ' + (err.message || 'خطأ غير معروف');
+          const fallbackText = createFallbackBookingText(nm, ph, service, day, slot);
+          wa(fallbackText);
+          se.textContent = 'تعذر إرسال الحجز مباشرة، تم فتح واتساب لإكمال الطلب بشكل يدوي.';
           se.hidden = false;
+          se.classList.add('err');
           btn.disabled = false;
         });
     }
