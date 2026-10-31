@@ -314,7 +314,77 @@ function sbOn(){return SB_URL.indexOf("YOUR")<0}
 function sbH(){return {apikey:SB_KEY,Authorization:"Bearer "+SB_KEY}}
 function refreshSlots(){var k=sel?dk(sel):"";document.querySelectorAll(".slot").forEach(function(b){var t=!!(k&&taken[k+"|"+b.textContent]);if(t&&slot===b.textContent)slot="";b.disabled=t;b.classList.toggle("taken",t);b.classList.toggle("on",b.textContent===slot&&!t)})}
 function load(){if(!sbOn())return;fetch(SB_URL+"/rest/v1/bookings?select=day,slot&day=gte."+dk(T),{headers:sbH()}).then(function(r){return r.json()}).then(function(rows){if(!Array.isArray(rows))return;taken={};rows.forEach(function(x){taken[x.day+"|"+x.slot]=1});build();refreshSlots()}).catch(function(){})}
-function book(d){var se=document.getElementById("serr"),btn=document.querySelector("#bookForm .btn"),sl=slot,when=DN[d.getDay()]+" "+ar(d.getDate())+" "+MN[d.getMonth()]+" "+ar(d.getFullYear());
+function normName(v){
+  return String(v||"").trim().replace(/\s+/g," ").toLowerCase();
+}
+function normPhone(v){
+  return String(v||"").replace(/[\s\-()]/g,"")
+    .replace(/[٠-٩]/g,function(x){return "٠١٢٣٤٥٦٧٨٩".indexOf(x)})
+    .replace(/[۰-۹]/g,function(x){return "۰۱۲۳۴۵۶۷۸۹".indexOf(x)});
+}
+function book(d){
+  var se=document.getElementById("serr"),
+      btn=document.querySelector("#bookForm .btn"),
+      sl=slot,
+      day=dk(d),
+      nm=bn.value.trim().replace(/\s+/g," "),
+      ph=bp.value.trim(),
+      when=DN[d.getDay()]+" "+ar(d.getDate())+" "+MN[d.getMonth()]+" "+ar(d.getFullYear());
+
+  if(!sbOn()){
+    se.textContent="خدمة الحجز غير مفعّلة بعد";
+    se.hidden=false;
+    return;
+  }
+
+  btn.disabled=true;
+  se.hidden=true;
+
+  fetch(SB_URL+"/rest/v1/bookings?select=name,phone&day=eq."+encodeURIComponent(day),{headers:sbH()})
+  .then(function(r){
+    if(!r.ok) throw 0;
+    return r.json();
+  })
+  .then(function(rows){
+    var duplicate=rows.some(function(x){
+      return normName(x.name)===normName(nm) &&
+             normPhone(x.phone)===normPhone(ph);
+    });
+
+    if(duplicate){
+      se.textContent="هذا الاسم ورقم الهاتف لديهما حجز مسبق في نفس اليوم. اختر يوماً آخر.";
+      se.hidden=false;
+      btn.disabled=false;
+      return;
+    }
+
+    return fetch(SB_URL+"/rest/v1/bookings",{
+      method:"POST",
+      headers:Object.assign({"Content-Type":"application/json",Prefer:"return=minimal"},sbH()),
+      body:JSON.stringify({day:day,slot:sl,name:nm,phone:ph,service:bs.value})
+    }).then(function(r){
+      if(r.status===409){
+        se.textContent="هذا الموعد حُجز للتو، اختر وقتاً آخر";
+        se.hidden=false;
+        slot="";
+        btn.disabled=false;
+        load();
+        return;
+      }
+      if(!r.ok) throw 0;
+
+      taken[day+"|"+sl]=1;
+      document.getElementById("bookForm").innerHTML=
+        '<div class="okb"><div class="okc">✓</div><h3>تم الحجز</h3><p>'+
+        when+'<br>الساعة '+sl+'</p><p class="note">نتمنى لك دوام الصحة، بانتظارك في العيادة</p><button type="button" class="btn" onclick="location.reload()">حجز موعد آخر</button></div>';
+    });
+  })
+  .catch(function(){
+    se.textContent="تعذر فحص الحجوزات أو تأكيد الحجز، حاول مرة أخرى";
+    se.hidden=false;
+    btn.disabled=false;
+  });
+}
 if(!sbOn()){se.textContent="خدمة الحجز غير مفعّلة بعد";se.hidden=false;return}
 btn.disabled=true;
 fetch(SB_URL+"/rest/v1/bookings",{method:"POST",headers:Object.assign({"Content-Type":"application/json",Prefer:"return=minimal"},sbH()),body:JSON.stringify({day:dk(d),slot:sl,name:bn.value,phone:bp.value,service:bs.value})}).then(function(r){
