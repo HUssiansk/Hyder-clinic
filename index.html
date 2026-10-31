@@ -454,12 +454,12 @@
 
     <section id="services">
       <h2>الخدمات</h2>
-      <div class="glass item"><div class="ic">🪥</div><div><b>حشوات وعلاج جذور</b><small>علاج التسوس وإنقاذ السن بأحدث الطرق</small></div><button class="go" onclick="pick('حشوة / علاج جذور')">اختر</button></div>
-      <div class="glass item"><div class="ic">✨</div><div><b>تنظيف وتبييض</b><small>إزالة الجير والتصبغات لابتسامة أنصع</small></div><button class="go" onclick="pick('تنظيف وتبييض')">اختر</button></div>
-      <div class="glass item"><div class="ic">😁</div><div><b>تقويم الأسنان</b><small>تقويم معدني وشفاف لابتسامة متناسقة</small></div><button class="go" onclick="pick('تقويم')">اختر</button></div>
-      <div class="glass item"><div class="ic">🔩</div><div><b>زراعة الأسنان</b><small>حل دائم للأسنان المفقودة</small></div><button class="go" onclick="pick('زراعة')">اختر</button></div>
-      <div class="glass item"><div class="ic">👑</div><div><b>تيجان وتجميل</b><small>تيجان وقشور لمظهر طبيعي</small></div><button class="go" onclick="pick('تيجان وتجميل')">اختر</button></div>
-      <div class="glass item"><div class="ic">🧒</div><div><b>أسنان الأطفال</b><small>رعاية لطيفة لأسنان صغارك</small></div><button class="go" onclick="pick('أسنان الأطفال')">اختر</button></div>
+      <div class="glass item"><div class="ic">🪥</div><div><b>حشوات وعلاج جذور</b><small>علاج التسوس وإنقاذ السن بأحدث الطرق</small></div><button class="go" onclick="pick('حشوة / علاج جذور')"></button></div>
+      <div class="glass item"><div class="ic">✨</div><div><b>تنظيف وتبييض</b><small>إزالة الجير والتصبغات لابتسامة أنصع</small></div><button class="go" onclick="pick('تنظيف وتبييض')"></button></div>
+      <div class="glass item"><div class="ic">😁</div><div><b>تقويم الأسنان</b><small>تقويم معدني وشفاف لابتسامة متناسقة</small></div><button class="go" onclick="pick('تقويم')"></button></div>
+      <div class="glass item"><div class="ic">🔩</div><div><b>زراعة الأسنان</b><small>حل دائم للأسنان المفقودة</small></div><button class="go" onclick="pick('زراعة')"></button></div>
+      <div class="glass item"><div class="ic">👑</div><div><b>تيجان وتجميل</b><small>تيجان وقشور لمظهر طبيعي</small></div><button class="go" onclick="pick('تيجان وتجميل')"></button></div>
+      <div class="glass item"><div class="ic">🧒</div><div><b>أسنان الأطفال</b><small>رعاية لطيفة لأسنان صغارك</small></div><button class="go" onclick="pick('أسنان الأطفال')"></button></div>
     </section>
 
     <section id="book">
@@ -540,7 +540,7 @@
   <script>
     const PHONE = '9647800028785';
     const SB_URL = 'https://zfivldktvbqdyqvusfld.supabase.co';
-    const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpmaXZsZGt0dmJxZHlxdnVzZmxkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTM0MjQwMDAwLCJleHAiOjE4OTM0MjQwMDB9.bA7n8Q1kJmJw8k5YdOeNqAb2LQ4E9hTYy5k8Vd9pKto';
+    const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpmaXZsZGt0dmJxZHlxdnVzZmxkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTM0MjQwMDAwLCJleHAiOjE4OTM0MjQwMDB9.bA7n8Q1kJmJw8k';
     const SLOTS = ['02:00 م', '03:00 م', '04:00 م', '05:00 م', '06:00 م', '07:00 م', '08:00 م', '09:00 م'];
     const DN = ['الأحد', 'الاثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة', 'السبت'];
     const MN = ['كانون الثاني', 'شباط', 'آذار', 'نيسان', 'أيار', 'حزيران', 'تموز', 'آب', 'أيلول', 'تشرين الأول', 'تشرين الثاني', 'كانون الأول'];
@@ -573,7 +573,7 @@
     }
 
     function sbOn() {
-      return SB_URL.indexOf('YOUR') < 0 && SB_URL && SB_KEY;
+      return Boolean(SB_URL && SB_URL.indexOf('YOUR') < 0 && SB_KEY && SB_KEY.length > 20);
     }
 
     function sbH() {
@@ -581,6 +581,13 @@
         apikey: SB_KEY,
         Authorization: 'Bearer ' + SB_KEY
       };
+    }
+
+    function showStatus(msg, isError) {
+      const se = document.getElementById('serr');
+      se.textContent = msg;
+      se.hidden = false;
+      se.classList.toggle('err', !!isError);
     }
 
     function buildCalendar() {
@@ -634,7 +641,7 @@
         headers: sbH()
       })
         .then(function (r) {
-          if (!r.ok) throw new Error('load failed');
+          if (!r.ok) throw new Error('load failed: ' + r.status);
           return r.json();
         })
         .then(function (rows) {
@@ -646,8 +653,9 @@
           buildCalendar();
           refreshSlots();
         })
-        .catch(function () {
-          console.warn('تعذر تحميل الحجوزات');
+        .catch(function (err) {
+          console.warn('تعذر تحميل الحجوزات:', err);
+          window.__bookingFallback = true;
         });
     }
 
@@ -667,6 +675,68 @@
 
     function wa(text) {
       window.location.href = 'https://wa.me/' + PHONE + '?text=' + encodeURIComponent(text);
+    }
+
+    function createFallbackBookingText(name, phone, service, dayValue, timeValue) {
+      const d = new Date(dayValue + 'T00:00:00');
+      const when = DN[d.getDay()] + ' ' + ar(d.getDate()) + ' ' + MN[d.getMonth()] + ' ' + ar(d.getFullYear());
+      return 'السلام عليكم دكتور، أتمنى أن تكون بخير.\n\n' +
+        'الاسم: ' + name + '\n' +
+        'رقم الهاتف: ' + phone + '\n' +
+        'الخدمة: ' + service + '\n' +
+        'اليوم: ' + when + '\n' +
+        'الوقت: ' + timeValue + '\n\n' +
+        'ملاحظة: تم إرسال هذا الطلب تلقائياً لأن الاتصال بقاعدة البيانات كان غير متاح في الوقت الحالي.\n' +
+        'من فضلك أكد الحجز عبر الواتساب أو عبر الاتصال المباشر.';
+    }
+
+    function submitBookingToSupabase(dayValue, nm, ph, service) {
+      return fetch(SB_URL + '/rest/v1/bookings?select=name,phone&day=eq.' + encodeURIComponent(dayValue), {
+        headers: sbH()
+      })
+        .then(function (r) {
+          if (!r.ok) throw new Error('booking lookup failed: ' + r.status);
+          return r.json();
+        })
+        .then(function (rows) {
+          const duplicate = rows.some(function (x) {
+            return normName(x.name) === normName(nm) && normPhone(x.phone) === normPhone(ph);
+          });
+
+          if (duplicate) {
+            const err = new Error('duplicate');
+            err.duplicate = true;
+            throw err;
+          }
+
+          return fetch(SB_URL + '/rest/v1/bookings', {
+            method: 'POST',
+            headers: Object.assign({
+              'Content-Type': 'application/json',
+              Prefer: 'return=minimal'
+            }, sbH()),
+            body: JSON.stringify({
+              day: dayValue,
+              slot: slot,
+              name: nm,
+              phone: ph,
+              service: service
+            })
+          });
+        })
+        .then(function (r) {
+          if (r && r.status === 409) {
+            const err = new Error('slot taken');
+            err.slotTaken = true;
+            throw err;
+          }
+
+          if (r && !r.ok) {
+            throw new Error('booking failed: ' + r.status);
+          }
+
+          return true;
+        });
     }
 
     document.documentElement.classList.add('js');
@@ -714,6 +784,7 @@
       const day = dk(d);
       const nm = document.getElementById('bn').value.trim().replace(/\s+/g, ' ');
       const ph = document.getElementById('bp').value.trim();
+      const service = document.getElementById('bs').value;
       const when = DN[d.getDay()] + ' ' + ar(d.getDate()) + ' ' + MN[d.getMonth()] + ' ' + ar(d.getFullYear());
 
       if (!sbOn()) {
@@ -731,60 +802,37 @@
       btn.disabled = true;
       se.hidden = true;
 
-      fetch(SB_URL + '/rest/v1/bookings?select=name,phone&day=eq.' + encodeURIComponent(day), {
-        headers: sbH()
-      })
-        .then(function (r) {
-          if (!r.ok) throw new Error('booking lookup failed');
-          return r.json();
+      submitBookingToSupabase(day, nm, ph, service)
+        .then(function () {
+          taken[day + '|' + slot] = 1;
+          document.getElementById('bookForm').innerHTML =
+            '<div class="okb"><div class="okc">✓</div><h3>تم الحجز</h3><p>' +
+            when + '<br>الساعة ' + slot + '</p><p class="note">نتمنى لك دوام الصحة، بانتظارك في العيادة</p><button type="button" class="btn" onclick="location.reload()">حجز جديد</button></div>';
         })
-        .then(function (rows) {
-          const duplicate = rows.some(function (x) {
-            return normName(x.name) === normName(nm) && normPhone(x.phone) === normPhone(ph);
-          });
+        .catch(function (err) {
+          console.error('booking failed:', err);
 
-          if (duplicate) {
+          if (err && err.duplicate) {
             se.textContent = 'هذا الاسم ورقم الهاتف لديهما حجز مسبق في نفس اليوم. اختر يوماً آخر.';
             se.hidden = false;
             btn.disabled = false;
             return;
           }
 
-          return fetch(SB_URL + '/rest/v1/bookings', {
-            method: 'POST',
-            headers: Object.assign({
-              'Content-Type': 'application/json',
-              Prefer: 'return=minimal'
-            }, sbH()),
-            body: JSON.stringify({
-              day: day,
-              slot: slot,
-              name: nm,
-              phone: ph,
-              service: document.getElementById('bs').value
-            })
-          }).then(function (r) {
-            if (r.status === 409) {
-              se.textContent = 'هذا الموعد حُجز للتو، اختر وقتاً آخر';
-              se.hidden = false;
-              slot = '';
-              btn.disabled = false;
-              loadBookings();
-              return;
-            }
+          if (err && err.slotTaken) {
+            se.textContent = 'هذا الموعد حُجز للتو، اختر وقتاً آخر';
+            se.hidden = false;
+            slot = '';
+            btn.disabled = false;
+            loadBookings();
+            return;
+          }
 
-            if (!r.ok) throw new Error('booking failed');
-
-            taken[day + '|' + slot] = 1;
-            document.getElementById('bookForm').innerHTML =
-              '<div class="okb"><div class="okc">✓</div><h3>تم الحجز</h3><p>' +
-              when + '<br>الساعة ' + slot + '</p><p class="note">نتمنى لك دوام الصحة، بانتظارك في العيادة</p><button type="button" class="btn" onclick="location.reload()">إغلاق</button></div>';
-          });
-        })
-        .catch(function () {
-          se.textContent = 'تعذر فحص الحجوزات أو تأكيد الحجز، حاول مرة أخرى';
+          const fallbackText = createFallbackBookingText(nm, ph, service, day, slot);
+          se.textContent = 'تعذر الاتصال بالخادم مؤقتاً، تم تجهيز الطلب ليُرسل عبر واتساب لإتمام الحجز يدوياً.';
           se.hidden = false;
           btn.disabled = false;
+          setTimeout(function () { wa(fallbackText); }, 400);
         });
     }
 
@@ -818,7 +866,7 @@
       e.preventDefault();
       const name = document.getElementById('an').value.trim();
       const ask = document.getElementById('aq').value.trim();
-      wa('السلام عليكم دكتور، أتمنى أن تكون بخير.\n\nالاسم: ' + name + '\nالاستفسار: ' + ask + '\n\nممنون جداً لوقتكم وتعاونكم، مع خالص الاحترام.');
+      wa('السلام عليكم دكتور، أتمنى أن تكون بخير.\n\nالاسم: ' + name + '\nالاستفسار: ' + ask + '\n\nممنون جداً لوقتكم وتعاونكم، نتطلع للإجابة على استفساري.');
     });
 
     document.querySelectorAll('.item').forEach(function (card) {
