@@ -577,8 +577,12 @@
     }
 
     function sbH() {
-  return { apikey: SB_KEY };
-}
+  var h = { apikey: SB_KEY };
+  if (SB_KEY.indexOf('eyJ') === 0) {
+    h.Authorization = 'Bearer ' + SB_KEY;
+  }
+  return h;
+    }
 
     function showStatus(msg, isError) {
       const se = document.getElementById('serr');
