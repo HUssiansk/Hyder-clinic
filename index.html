@@ -109,6 +109,79 @@ label{font-size:13.5px}
 .okc{width:76px;height:76px;margin:0 auto 12px;border-radius:50%;background:#fff;color:#0f8a80;font-size:42px;font-weight:800;display:grid;place-items:center}
 .okb h3{margin:0 0 6px;font-family:Alexandria,'IBM Plex Sans Arabic',Tahoma,sans-serif;font-size:22px}
 .okb p{margin:0 0 12px}
+  
+/* ===== تحسين وضوح النصوص في النماذج ===== */
+
+/* خلفية نموذج الحجز والاستفسار */
+form.glass {
+  background: rgba(255, 255, 255, 0.90) !important;
+  color: #174B48 !important;
+  border: 1px solid rgba(31, 179, 166, 0.25);
+}
+
+/* عناوين الحقول */
+form label {
+  color: #174B48 !important;
+  font-weight: 700 !important;
+  font-size: 14px;
+}
+
+/* حقول الإدخال */
+form input,
+form select,
+form textarea {
+  background: #FFFFFF !important;
+  color: #173F3B !important;
+  border: 1.5px solid #B8DCD5 !important;
+  font-weight: 600;
+}
+
+/* النص الإرشادي */
+form input::placeholder,
+form textarea::placeholder {
+  color: #829995 !important;
+}
+
+/* أوقات الحجز */
+.slot {
+  background: #EAF8F5 !important;
+  color: #175D55 !important;
+  border: 1.5px solid #A9DCD2 !important;
+  font-weight: 700;
+}
+
+/* الوقت المحدد */
+.slot.on {
+  background: #0F8A80 !important;
+  color: #FFFFFF !important;
+  border-color: #0F8A80 !important;
+}
+
+/* الأوقات المحجوزة */
+.slot.taken {
+  background: #EEEEEE !important;
+  color: #999999 !important;
+}
+
+/* الملاحظات */
+.note {
+  color: #426B65 !important;
+}
+
+/* رسائل الخطأ */
+#serr {
+  color: #B42318 !important;
+  background: #FDECEC !important;
+  padding: 8px;
+  border-radius: 10px;
+}
+
+/* عنوان قسم الحجز */
+#book h2,
+#ask h2 {
+  color: #174B48;
+}
+  
 </style>
 </head>
 <body id="top">
