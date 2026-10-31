@@ -384,7 +384,6 @@ function book(d){
     se.hidden=false;
     btn.disabled=false;
   });
-}
 if(!sbOn()){se.textContent="خدمة الحجز غير مفعّلة بعد";se.hidden=false;return}
 btn.disabled=true;
 fetch(SB_URL+"/rest/v1/bookings",{method:"POST",headers:Object.assign({"Content-Type":"application/json",Prefer:"return=minimal"},sbH()),body:JSON.stringify({day:dk(d),slot:sl,name:bn.value,phone:bp.value,service:bs.value})}).then(function(r){
