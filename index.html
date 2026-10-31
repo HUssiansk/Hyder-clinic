@@ -190,7 +190,7 @@ els.forEach(function(el,i){el.classList.add("rv");el.style.setProperty("--d",(i%
 if("IntersectionObserver" in window){var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add("in");io.unobserve(e.target)}})},{threshold:.12});els.forEach(function(el){io.observe(el)})}else{els.forEach(function(el){el.classList.add("in")})}
 window.addEventListener("scroll",function(){var y=window.scrollY;document.querySelector(".b1").style.transform="translateY("+y*.15+"px)";document.querySelector(".b2").style.transform="translateY("+(-y*.1)+"px)";document.querySelector(".b3").style.transform="translateY("+y*.2+"px)"},{passive:true});
 var PHONE="9647800028785", slot="";
-var SB_URL="https://zfivldktvbqdyqvusfld.supabase.co/rest/v1/", SB_KEY="sb_publishable_W3DyEW6E3yHvfWQtJbRDKQ_7yiMU-lr";
+var SB_URL="https://zfivldktvbqdyqvusfld.supabase.co/rest/v1/", SB_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpmaXZsZGt0dmJxZHlxdnVzZmxkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTM0MjQwMTgsImV4cCI6MjEwOTAwMDAxOH0.khLlqZJBbsq5VANnQVg0s9UglFKMJve-tYYHphjyy5M";
 var SLOTS=["02:00 م","03:00 م","04:00 م","05:00 م","06:00 م","07:00 م","08:00 م","09:00 م"],taken={};
 function dk(d){return d.getFullYear()+"-"+("0"+(d.getMonth()+1)).slice(-2)+"-"+("0"+d.getDate()).slice(-2)}
 var MN=["كانون الثاني","شباط","آذار","نيسان","أيار","حزيران","تموز","آب","أيلول","تشرين الأول","تشرين الثاني","كانون الأول"],DN=["الأحد","الاثنين","الثلاثاء","الأربعاء","الخميس","الجمعة","السبت"];
