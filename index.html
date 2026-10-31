@@ -454,12 +454,12 @@
 
     <section id="services">
       <h2>الخدمات</h2>
-      <div class="glass item"><div class="ic">🪥</div><div><b>حشوات وعلاج جذور</b><small>علاج التسوس وإنقاذ السن بأحدث الطرق</small></div><button class="go" onclick="pick('حشوة / علاج جذور')">اختيار</button></div>
-      <div class="glass item"><div class="ic">✨</div><div><b>تنظيف وتبييض</b><small>إزالة الجير والتصبغات لابتسامة أنصع</small></div><button class="go" onclick="pick('تنظيف وتبييض')">اختيار</button></div>
-      <div class="glass item"><div class="ic">😁</div><div><b>تقويم الأسنان</b><small>تقويم معدني وشفاف لابتسامة متناسقة</small></div><button class="go" onclick="pick('تقويم')">اختيار</button></div>
-      <div class="glass item"><div class="ic">🔩</div><div><b>زراعة الأسنان</b><small>حل دائم للأسنان المفقودة</small></div><button class="go" onclick="pick('زراعة')">اختيار</button></div>
-      <div class="glass item"><div class="ic">👑</div><div><b>تيجان وتجميل</b><small>تيجان وقشور لمظهر طبيعي</small></div><button class="go" onclick="pick('تيجان وتجميل')">اختيار</button></div>
-      <div class="glass item"><div class="ic">🧒</div><div><b>أسنان الأطفال</b><small>رعاية لطيفة لأسنان صغارك</small></div><button class="go" onclick="pick('أسنان الأطفال')">اختيار</button></div>
+      <div class="glass item"><div class="ic">🪥</div><div><b>حشوات وعلاج جذور</b><small>علاج التسوس وإنقاذ السن بأحدث الطرق</small></div><button class="go" onclick="pick('حشوة / علاج جذور')">حجز</button></div>
+      <div class="glass item"><div class="ic">✨</div><div><b>تنظيف وتبييض</b><small>إزالة الجير والتصبغات لابتسامة أنصع</small></div><button class="go" onclick="pick('تنظيف وتبييض')">حجز</button></div>
+      <div class="glass item"><div class="ic">😁</div><div><b>تقويم الأسنان</b><small>تقويم معدني وشفاف لابتسامة متناسقة</small></div><button class="go" onclick="pick('تقويم')">حجز</button></div>
+      <div class="glass item"><div class="ic">🔩</div><div><b>زراعة الأسنان</b><small>حل دائم للأسنان المفقودة</small></div><button class="go" onclick="pick('زراعة')">حجز</button></div>
+      <div class="glass item"><div class="ic">👑</div><div><b>تيجان وتجميل</b><small>تيجان وقشور لمظهر طبيعي</small></div><button class="go" onclick="pick('تيجان وتجميل')">حجز</button></div>
+      <div class="glass item"><div class="ic">🧒</div><div><b>أسنان الأطفال</b><small>رعاية لطيفة لأسنان صغارك</small></div><button class="go" onclick="pick('أسنان الأطفال')">حجز</button></div>
     </section>
 
     <section id="book">
@@ -615,7 +615,7 @@
           html += '<div class="mh">' + MN[currentMonth] + ' ' + ar(d.getFullYear()) + '</div>';
         }
 
-        group += '<button type="button" class="dc' + (full ? ' full' : '') + '" data-t="' + (+d) + '"' + (full ? ' disabled' : '') + '><small>' + (full ? 'ممتلئ' : DN[d.getDay()]) + '</small><span>' + ar(d.getDate()) + '</span></button>';
+        group += '<button type="button" class="dc' + (full ? ' full' : '') + '" data-t="' + (+d) + '"' + (full ? ' disabled' : '') + '><small>' + (full ? 'ممتلئ' : DN[d.getDay()]) + '</small><div>' + ar(d.getDate()) + '</div></button>';
       }
 
       if (group) html += '<div class="dg">' + group + '</div>';
@@ -839,9 +839,7 @@
             return;
           }
 
-          const fallbackText = createFallbackBookingText(nm, ph, service, day, slot);
-          wa(fallbackText);
-          se.textContent = 'تعذر إرسال الحجز مباشرة، تم فتح واتساب لإكمال الطلب بشكل يدوي.';
+          se.textContent = 'تعذر إرسال الحجز مباشرة، يرجى المحاولة مرة أخرى أو التواصل معنا مباشرة.';
           se.hidden = false;
           se.classList.add('err');
           btn.disabled = false;
