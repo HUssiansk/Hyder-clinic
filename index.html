@@ -454,12 +454,12 @@
 
     <section id="services">
       <h2>الخدمات</h2>
-      <div class="glass item"><div class="ic">🪥</div><div><b>حشوات وعلاج جذور</b><small>علاج التسوس وإنقاذ السن بأحدث الطرق</small></div><button class="go" onclick="pick('حشوة / علاج جذور')"></button></div>
-      <div class="glass item"><div class="ic">✨</div><div><b>تنظيف وتبييض</b><small>إزالة الجير والتصبغات لابتسامة أنصع</small></div><button class="go" onclick="pick('تنظيف وتبييض')"></button></div>
-      <div class="glass item"><div class="ic">😁</div><div><b>تقويم الأسنان</b><small>تقويم معدني وشفاف لابتسامة متناسقة</small></div><button class="go" onclick="pick('تقويم')"></button></div>
-      <div class="glass item"><div class="ic">🔩</div><div><b>زراعة الأسنان</b><small>حل دائم للأسنان المفقودة</small></div><button class="go" onclick="pick('زراعة')"></button></div>
-      <div class="glass item"><div class="ic">👑</div><div><b>تيجان وتجميل</b><small>تيجان وقشور لمظهر طبيعي</small></div><button class="go" onclick="pick('تيجان وتجميل')"></button></div>
-      <div class="glass item"><div class="ic">🧒</div><div><b>أسنان الأطفال</b><small>رعاية لطيفة لأسنان صغارك</small></div><button class="go" onclick="pick('أسنان الأطفال')"></button></div>
+      <div class="glass item"><div class="ic">🪥</div><div><b>حشوات وعلاج جذور</b><small>علاج التسوس وإنقاذ السن بأحدث الطرق</small></div><button class="go" onclick="pick('حشوة / علاج جذور')">اختيار</button></div>
+      <div class="glass item"><div class="ic">✨</div><div><b>تنظيف وتبييض</b><small>إزالة الجير والتصبغات لابتسامة أنصع</small></div><button class="go" onclick="pick('تنظيف وتبييض')">اختيار</button></div>
+      <div class="glass item"><div class="ic">😁</div><div><b>تقويم الأسنان</b><small>تقويم معدني وشفاف لابتسامة متناسقة</small></div><button class="go" onclick="pick('تقويم')">اختيار</button></div>
+      <div class="glass item"><div class="ic">🔩</div><div><b>زراعة الأسنان</b><small>حل دائم للأسنان المفقودة</small></div><button class="go" onclick="pick('زراعة')">اختيار</button></div>
+      <div class="glass item"><div class="ic">👑</div><div><b>تيجان وتجميل</b><small>تيجان وقشور لمظهر طبيعي</small></div><button class="go" onclick="pick('تيجان وتجميل')">اختيار</button></div>
+      <div class="glass item"><div class="ic">🧒</div><div><b>أسنان الأطفال</b><small>رعاية لطيفة لأسنان صغارك</small></div><button class="go" onclick="pick('أسنان الأطفال')">اختيار</button></div>
     </section>
 
     <section id="book">
@@ -577,11 +577,11 @@
     }
 
     function sbH() {
-  var h = { apikey: SB_KEY };
-  if (SB_KEY.indexOf('eyJ') === 0) {
-    h.Authorization = 'Bearer ' + SB_KEY;
-  }
-  return h;
+      var h = { apikey: SB_KEY };
+      if (SB_KEY.indexOf('eyJ') === 0) {
+        h.Authorization = 'Bearer ' + SB_KEY;
+      }
+      return h;
     }
 
     function showStatus(msg, isError) {
@@ -615,7 +615,7 @@
           html += '<div class="mh">' + MN[currentMonth] + ' ' + ar(d.getFullYear()) + '</div>';
         }
 
-        group += '<button type="button" class="dc' + (full ? ' full' : '') + '" data-t="' + (+d) + '"' + (full ? ' disabled' : '') + '><small>' + (full ? 'ممتلئ' : DN[d.getDay()]) + '</small>' + ar(d.getDate()) + '</button>';
+        group += '<button type="button" class="dc' + (full ? ' full' : '') + '" data-t="' + (+d) + '"' + (full ? ' disabled' : '') + '><small>' + (full ? 'ممتلئ' : DN[d.getDay()]) + '</small><div>' + ar(d.getDate()) + '</div></button>';
       }
 
       if (group) html += '<div class="dg">' + group + '</div>';
@@ -803,34 +803,23 @@
       btn.disabled = true;
       se.hidden = true;
 
-      function submitBookingToSupabase(dayValue, nm, ph, service) {
-  return fetch(SB_URL + '/rest/v1/bookings', {
-    method: 'POST',
-    headers: Object.assign({
-      'Content-Type': 'application/json',
-      Prefer: 'return=minimal'
-    }, sbH()),
-    body: JSON.stringify({
-      day: dayValue,
-      slot: slot,
-      name: nm,
-      phone: ph,
-      service: service
-    })
-  }).then(function (r) {
-    if (r.status === 409) {
-      const err = new Error('slot taken');
-      err.slotTaken = true;
-      throw err;
-    }
-    if (!r.ok) {
-      return r.text().then(function (t) {
-        throw new Error('booking failed: ' + r.status + ' ' + t);
-      });
-    }
-    return true;
-  });
-}
+      submitBookingToSupabase(day, nm, ph, service)
+        .then(function () {
+          se.textContent = 'تم تأكيد الحجز بنجاح! سيتم التواصل معك لتأكيد الموعد.';
+          se.classList.remove('err');
+          se.hidden = false;
+          btn.disabled = false;
+          document.getElementById('bn').value = '';
+          document.getElementById('bp').value = '';
+          sel = null;
+          slot = '';
+          document.getElementById('dpick').textContent = 'اختر يوم الحجز';
+          document.querySelectorAll('.slot').forEach(function (x) {
+            x.classList.remove('on');
+            x.disabled = false;
+          });
+          loadBookings();
+        })
         .catch(function (err) {
           console.error('booking failed:', err);
 
@@ -851,8 +840,8 @@
           }
 
           se.textContent = 'فشل الحجز: ' + (err.message || 'خطأ غير معروف');
-se.hidden = false;
-btn.disabled = false;
+          se.hidden = false;
+          btn.disabled = false;
         });
     }
 
@@ -886,7 +875,7 @@ btn.disabled = false;
       e.preventDefault();
       const name = document.getElementById('an').value.trim();
       const ask = document.getElementById('aq').value.trim();
-      wa('السلام عليكم دكتور، أتمنى أن تكون بخير.\n\nالاسم: ' + name + '\nالاستفسار: ' + ask + '\n\nممنون جداً لوقتكم وتعاونكم، نتطلع للإجابة على استفساري.');
+      wa('السلام عليكم دكتور، أتمنى أن تكون بخير.\n\nالاسم: ' + name + '\nالاستفسار: ' + ask + '\n\nممنون جداً لوقتكم وتعاونكم.');
     });
 
     document.querySelectorAll('.item').forEach(function (card) {
