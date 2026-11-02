@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>إدارة حجوزات العيادة</title>
+<link href="https://fonts.googleapis.com/css2?family=Alexandria:wght@600;700;800&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--deep:#0f766e;--pri:#1fb3a6;--mint:#eaf8f5;--ink:#174b48;--muted:#64817e;--line:#dcebe7;--bg:#f3f8f7;--white:#fff;--red:#b42318;--shadow:0 12px 32px rgba(20,80,72,.08)}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;background:linear-gradient(145deg,#e6f6f2,#f7faf9 48%,#fff1e8);min-height:100vh;color:var(--ink);font-family:'IBM Plex Sans Arabic',Arial,sans-serif}
+button,input{font:inherit}
+.wrap{max-width:1120px;margin:auto;padding:28px 18px 60px}
+.top{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:22px}
+.brand{display:flex;align-items:center;gap:13px}
+.logo{width:52px;height:52px;border-radius:17px;background:linear-gradient(135deg,#0f8a80,#43c9b9);display:grid;place-items:center;color:white;font-size:25px;box-shadow:0 8px 18px #0f8a8030}
+h1,h2,h3{font-family:Alexandria,'IBM Plex Sans Arabic',sans-serif}
+h1{font-size:clamp(19px,3vw,27px);margin:0}
+.sub{color:var(--muted);font-size:13px;margin-top:4px}
+.pill{background:#ffffffb8;border:1px solid #fff;padding:8px 13px;border-radius:30px;color:var(--deep);font-size:12px;font-weight:700}
+.panel{background:#ffffffd9;border:1px solid #fff;border-radius:24px;padding:22px;box-shadow:var(--shadow);backdrop-filter:blur(12px)}
+.login{max-width:440px;margin:8vh auto}
+.login h2{margin:0 0 8px;font-size:21px}
+.login p{color:var(--muted);font-size:14px;margin:0 0 20px}
+.field{display:flex;gap:9px}
+input{min-width:0;width:100%;padding:13px 15px;border:1px solid var(--line);border-radius:13px;background:#fff;color:var(--ink);outline:none}
+input:focus{border-color:var(--pri);box-shadow:0 0 0 3px #1fb3a619}
+.btn{border:0;border-radius:13px;background:linear-gradient(100deg,#0f8a80,#32bdae);color:white;padding:12px 19px;font-weight:700;cursor:pointer;white-space:nowrap;box-shadow:0 6px 14px #0f8a8025}
+.btn:disabled{opacity:.6;cursor:wait}
+.btn.light{background:#e8f6f3;color:var(--deep);box-shadow:none}
+.error{display:none;margin-top:13px;padding:11px 13px;border-radius:12px;background:#fff0ef;color:var(--red);font-size:13px;line-height:1.6}
+.dashboard{display:none}
+.toolbar{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:18px}
+.toolbar h2{font-size:19px;margin:0}
+.actions{display:flex;gap:9px;flex-wrap:wrap}
+.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:13px;margin-bottom:18px}
+.stat{padding:17px;border-radius:18px;background:#fff;border:1px solid var(--line)}
+.stat span{display:block;color:var(--muted);font-size:12px}
+.stat strong{display:block;font-family:Alexandria,sans-serif;font-size:25px;margin-top:5px;color:var(--deep)}
+.filters{display:grid;grid-template-columns:1fr 190px;gap:10px;margin-bottom:15px}
+.table-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:16px;background:#fff}
+table{width:100%;border-collapse:collapse;min-width:720px}
+th,td{padding:13px 14px;text-align:right;border-bottom:1px solid #edf3f1;font-size:13px;white-space:nowrap}
+th{background:#edf8f5;color:var(--deep);font-weight:700}
+tbody tr:hover{background:#f8fcfb}
+tbody tr:last-child td{border-bottom:0}
+.empty{text-align:center;padding:28px;color:var(--muted)}
+.status{font-size:12px;color:var(--muted);margin-top:12px;min-height:20px}
+.hidden{display:none!important}
+.lbl{font-size:12px;color:var(--muted);margin:0 2px 5px;display:block}
+.datebox{display:flex;gap:8px;align-items:center;min-width:0}
+.datebox input{flex:1;-webkit-appearance:none;appearance:none;min-height:48px;text-align:right}
+.btn.danger{background:#fff0ef;color:var(--red);box-shadow:none;padding:8px 14px;font-size:12px}
+tr.past{opacity:.55}
+tr.now{background:#f1fbf8}
+.tag{display:inline-block;margin-inline-start:6px;padding:2px 8px;border-radius:20px;background:#dff5ef;color:var(--deep);font-size:11px;font-weight:700}
+.filters{grid-template-columns:1fr 290px}
+@media(max-width:600px){
+.filters{grid-template-columns:1fr}
+table{min-width:0}
+thead{display:none}
+table,tbody,tr,td{display:block;width:100%}
+tr{padding:12px 14px;border-bottom:8px solid var(--bg)}
+td{border:0;padding:5px 0;white-space:normal;display:flex;justify-content:space-between;align-items:center;gap:10px}
+td::before{content:attr(data-label);color:var(--muted);font-size:12px;flex-shrink:0}
+td.empty{display:block}
+td.empty::before{content:none}
+td.act{justify-content:flex-end;padding-top:8px}
+td.act::before{content:none}
+}
+@media(max-width:600px){.wrap{padding:18px 12px 35px}.top{align-items:flex-start}.panel{padding:17px;border-radius:20px}.field{flex-direction:column}.field .btn{width:100%}.stats{gap:8px}.stat{padding:13px 10px}.stat strong{font-size:21px}.filters{grid-template-columns:1fr}.pill{font-size:11px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div class="brand"><div class="logo">✚</div><div><h1>إدارة حجوزات العيادة</h1><div class="sub">عيادة الدكتور حيدر محمد طالب لطب الأسنان</div></div></div>
+    <div class="pill">لوحة تحكم الإدارة</div>
+  </header>
+
+  <section class="panel login" id="loginBox">
+    <h2>تسجيل الدخول</h2>
+    <p>أدخل كلمة مرور الإدارة لعرض حجوزات المرضى.</p>
+    <div class="field">
+      <input id="pass" type="password" placeholder="كلمة المرور" autocomplete="current-password">
+      <button class="btn" id="loginBtn" type="button">دخول</button>
+    </div>
+    <div class="error" id="loginError"></div>
+  </section>
+
+  <main class="dashboard" id="dataBox">
+    <div class="toolbar">
+      <div><h2>الحجوزات</h2><div class="sub">عرض الحجوزات المسجلة في Google Sheets</div></div>
+      <div class="actions">
+        <button class="btn light" id="refreshBtn" type="button">↻ تحديث</button>
+        <button class="btn light" id="logoutBtn" type="button">تسجيل الخروج</button>
+      </div>
+    </div>
+    <div class="stats">
+      <div class="stat"><span>إجمالي الحجوزات المعروضة</span><strong id="total">0</strong></div>
+      <div class="stat"><span>حجوزات اليوم</span><strong id="today">0</strong></div>
+      <div class="stat"><span>عدد الخدمات</span><strong id="services">0</strong></div>
+    </div>
+    <section class="panel">
+      <div class="filters">
+        <div><label class="lbl" for="search">بحث</label><input id="search" type="search" placeholder="ابحث بالاسم أو رقم الهاتف..."></div>
+        <div><label class="lbl" for="dateFilter">تصفية حسب التاريخ</label><div class="datebox"><input id="dateFilter" type="date"><button class="btn light" id="clearDate" type="button">مسح</button></div></div>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>التاريخ</th><th>الوقت</th><th>الاسم</th><th>رقم الهاتف</th><th>الخدمة</th><th>إجراء</th></tr></thead>
+          <tbody id="tbody"><tr><td colspan="6" class="empty">جاري تحميل الحجوزات...</td></tr></tbody>
+        </table>
+      </div>
+      <div class="status" id="status"></div>
+    </section>
+  </main>
+</div>
+
+<script>
+const ADMIN_URL = "https://script.google.com/macros/s/AKfycbyqyeVlmI9dp0U4DBgG9TnEa18T9j0nnKcyFIpvyiPOpvwbL-YSsmOGaknA-Z6MTf2l/exec";
+let AUTH_PASS = "";
+let bookings = [];
+
+const $ = id => document.getElementById(id);
+
+function showError(message) {
+  const el = $("loginError");
+  el.textContent = message;
+  el.style.display = "block";
+}
+function escapeHTML(value) {
+  return String(value ?? "").replace(/[&<>"']/g, c => ({
+    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+  }[c]));
+}
+function normalizeDate(value) {
+  if (!value) return "";
+  const s = String(value).trim();
+  if (/^\d{4}-\d{2}-\d{2}$/.test(s)) return s;
+  const d = new Date(s);
+  if (!Number.isNaN(d.getTime())) {
+    return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
+  }
+  return s;
+}
+async function login() {
+  const pass = $("pass").value.trim();
+  if (!pass) { showError("يرجى إدخال كلمة المرور."); return; }
+  AUTH_PASS = pass;
+  $("loginBtn").disabled = true;
+  $("loginBtn").textContent = "جارٍ التحقق...";
+  try {
+    await loadBookings(true);
+  } finally {
+    $("loginBtn").disabled = false;
+    $("loginBtn").textContent = "دخول";
+  }
+}
+async function loadBookings(firstLogin = false) {
+  const status = $("status");
+  if (!AUTH_PASS) return;
+  if (!firstLogin) {
+    $("refreshBtn").disabled = true;
+    $("refreshBtn").textContent = "جارٍ التحديث...";
+  }
+  try {
+    const url = `${ADMIN_URL}?mode=admin&pass=${encodeURIComponent(AUTH_PASS)}&t=${Date.now()}`;
+    const res = await fetch(url, { method:"GET", cache:"no-store" });
+    if (!res.ok) throw new Error(`استجابة الخادم غير ناجحة (${res.status})`);
+    const raw = await res.text();
+    let data;
+    try { data = JSON.parse(raw); }
+    catch { throw new Error("الرد من Google Apps Script ليس JSON. تحقق من نشر Web App وصلاحية الوصول."); }
+
+    if (!data || data.ok !== true) {
+      throw new Error(data?.error || "كلمة المرور غير صحيحة أو أن الخادم رفض الطلب.");
+    }
+    if (!Array.isArray(data.data)) {
+      throw new Error("تم الاتصال بالخادم، لكن صيغة البيانات غير متوقعة. نحتاج مراجعة كود Apps Script.");
+    }
+
+    bookings = data.data;
+    $("loginBox").classList.add("hidden");
+    $("dataBox").style.display = "block";
+    renderBookings();
+    status.textContent = `تم تحميل ${bookings.length} حجز بنجاح.`;
+  } catch (err) {
+    console.error("Admin loading error:", err);
+    if (firstLogin) showError(err.message || "تعذر الاتصال بالخادم.");
+    else status.textContent = "تعذر تحديث الحجوزات: " + (err.message || "خطأ غير معروف");
+  } finally {
+    $("refreshBtn").disabled = false;
+    $("refreshBtn").textContent = "↻ تحديث";
+  }
+}
+const DN = ["الأحد","الاثنين","الثلاثاء","الأربعاء","الخميس","الجمعة","السبت"];
+function dayName(s) {
+  const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(s);
+  return m ? DN[new Date(+m[1], +m[2]-1, +m[3]).getDay()] : "";
+}
+function slotMin(s) {
+  const m = /(\d+):(\d+)\s*(ص|م)/.exec(s || "");
+  return m ? ((+m[1] % 12) + (m[3] === "م" ? 12 : 0)) * 60 + +m[2] : 0;
+}
+function todayKey() {
+  const t = new Date();
+  return `${t.getFullYear()}-${String(t.getMonth()+1).padStart(2,"0")}-${String(t.getDate()).padStart(2,"0")}`;
+}
+function renderBookings() {
+  const query = $("search").value.trim().toLowerCase();
+  const date = $("dateFilter").value;
+  const tk = todayKey();
+  const cmp = (a, b) => a.day === b.day ? slotMin(a.slot) - slotMin(b.slot) : (a.day < b.day ? -1 : 1);
+  const filtered = bookings.filter(item => {
+    const text = [item.name,item.phone,item.service].join(" ").toLowerCase();
+    return (!query || text.includes(query)) &&
+      (!date || normalizeDate(item.day) === date);
+  });
+  const upcoming = filtered.filter(x => x.day >= tk).sort(cmp);
+  const past = filtered.filter(x => x.day < tk).sort((a, b) => cmp(b, a));
+  const rows = upcoming.concat(past);
+  const tbody = $("tbody");
+  if (!rows.length) {
+    tbody.innerHTML = `<tr><td colspan="6" class="empty">${bookings.length ? "لا توجد نتائج مطابقة للبحث." : "لا توجد حجوزات حالياً."}</td></tr>`;
+  } else {
+    tbody.innerHTML = rows.map(item => {
+      const cls = item.day < tk ? "past" : (item.day === tk ? "now" : "");
+      const tag = item.day === tk ? '<span class="tag">اليوم</span>' : "";
+      return `
+      <tr class="${cls}">
+        <td data-label="التاريخ"><span>${escapeHTML(dayName(item.day))} ${escapeHTML(item.day)}${tag}</span></td>
+        <td data-label="الوقت">${escapeHTML(item.slot)}</td>
+        <td data-label="الاسم">${escapeHTML(item.name)}</td>
+        <td data-label="الهاتف" dir="ltr"><a href="tel:${escapeHTML(item.phone)}" style="color:inherit">${escapeHTML(item.phone)}</a></td>
+        <td data-label="الخدمة">${escapeHTML(item.service)}</td>
+        <td class="act"><button class="btn danger" type="button" data-cancel data-day="${escapeHTML(item.day)}" data-slot="${escapeHTML(item.slot)}" data-name="${escapeHTML(item.name)}">إلغاء الحجز</button></td>
+      </tr>`;
+    }).join("");
+  }
+  $("total").textContent = bookings.length;
+  $("today").textContent = bookings.filter(x => x.day === tk).length;
+  $("services").textContent = new Set(bookings.map(x => x.service).filter(Boolean)).size;
+}
+async function cancelBooking(day, slot, name) {
+  if (!confirm(`إلغاء حجز ${name}\n${dayName(day)} ${day} - ${slot}؟`)) return;
+  const status = $("status");
+  status.textContent = "جارٍ إلغاء الحجز...";
+  try {
+    const url = `${ADMIN_URL}?mode=cancel&pass=${encodeURIComponent(AUTH_PASS)}&day=${encodeURIComponent(day)}&slot=${encodeURIComponent(slot)}&t=${Date.now()}`;
+    const res = await fetch(url, { method:"GET", cache:"no-store" });
+    const data = await res.json();
+    if (!data || data.ok !== true) throw new Error(data?.error || "تعذر إلغاء الحجز");
+    await loadBookings(false);
+    status.textContent = "تم إلغاء الحجز ✓ — " + status.textContent;
+  } catch (err) {
+    status.textContent = "تعذر إلغاء الحجز: " + (err.message || "خطأ غير معروف");
+  }
+}
+$("tbody").addEventListener("click", e => {
+  const b = e.target.closest("[data-cancel]");
+  if (b) cancelBooking(b.dataset.day, b.dataset.slot, b.dataset.name);
+});
+$("clearDate").addEventListener("click", () => { $("dateFilter").value = ""; renderBookings(); });
+$("loginBtn").addEventListener("click", login);
+$("pass").addEventListener("keydown", e => { if (e.key === "Enter") login(); });
+$("refreshBtn").addEventListener("click", () => loadBookings(false));
+$("search").addEventListener("input", renderBookings);
+$("dateFilter").addEventListener("change", renderBookings);
+$("logoutBtn").addEventListener("click", () => {
+  AUTH_PASS = "";
+  bookings = [];
+  $("pass").value = "";
+  $("dataBox").style.display = "none";
+  $("loginBox").classList.remove("hidden");
+  $("loginError").style.display = "none";
+});
+</script>
+</body>
+</html>
